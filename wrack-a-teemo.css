@@ -54,6 +54,7 @@ button:hover {
   height: 200px;
   background: "yellow";
   overflow: hidden;
+  user-select: none;
 }
 
 .teemo,
