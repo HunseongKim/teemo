@@ -184,6 +184,10 @@
       cellTags.forEach((cell, index) => {
         // 티모 클릭
         cell.querySelector(".teemo").addEventListener("click", (e) => {
+          if (!e.target.classList.contains("dead")) {
+            score++;
+            scoreTag.textContent = `${score}점`;
+          }
           e.target.classList.add("dead");
           e.target.classList.add("hidden");
           clearTimeout(holes[index]);
@@ -191,12 +195,20 @@
             e.target.classList.remove("dead");
             holes[index] = 0;
           }, 1000);
-          score++;
-          scoreTag.textContent = `${score}점`;
         });
         // 폭탄 클릭
         cell.querySelector(".bomb").addEventListener("click", (e) => {
-          count++;
+          if (!e.target.classList.contains("boom")) {
+            // 목숨깎기
+            count++;
+            if (count === 1) {
+              heartContainerTag.removeChild(heart3);
+            } else if (count === 2) {
+              heartContainerTag.removeChild(heart2);
+            } else if (count === 3) {
+              heartContainerTag.removeChild(heart1);
+            }
+          }
           e.target.classList.add("boom");
           e.target.classList.add("hidden");
           clearTimeout(holes[index]);
@@ -204,14 +216,6 @@
             e.target.classList.remove("boom");
             holes[index] = 0;
           }, 1000);
-          // 목숨깎기
-          if (count >= 3) {
-            heartContainerTag.removeChild(heart1);
-          } else if (count >= 2) {
-            heartContainerTag.removeChild(heart2);
-          } else if (count >= 1) {
-            heartContainerTag.removeChild(heart3);
-          }
         });
       });
     </script>
