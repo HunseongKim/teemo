@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="wrack-a-teemo.css" />
+    <title>두더지잡기게임</title>
+  </head>
+  <body>
+    <div id="left"></div>
+    <div id="mid">
+      <h1 style="font-size: 50px; margin-top: 0">티모 잡기 게임</h1>
+      <div>
+        제한시간: <span id="timer">60초</span>&nbsp; 점수: <span id="score">0점</span>
+        <button id="start">시작</button>
+      </div>
+      <div id="heartContainer">
+        <div class="heart" id="heart1"></div>
+        <div class="heart" id="heart2"></div>
+        <div class="heart" id="heart3"></div>
+      </div>
+      <div id="game">
+        <div class="row">
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+          <div class="cell">
+            <div class="hole"></div>
+            <div class="teemo hidden"></div>
+            <div class="bomb hidden"></div>
+            <div class="holeFront"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="right"></div>
+    <script>
+      const timerTag = document.querySelector("#timer");
+      const scoreTag = document.querySelector("#score");
+      const startTag = document.querySelector("#start");
+      const gameTag = document.querySelector("#game");
+      const cellTags = document.querySelectorAll(".cell");
+
+      const heartContainerTag = document.querySelector("#heartContainer");
+      const heart1 = document.querySelector("#heart1");
+      const heart2 = document.querySelector("#heart2");
+      const heart3 = document.querySelector("#heart3");
+
+      let teemoPercent = 0.3;
+      let bombPercent = 0.5;
+
+      let second = 61;
+      let score = 0;
+      let count = 0;
+
+      const holes = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let started = false;
+
+      const setTimeoutPromise = (ms) =>
+        new Promise((resolve, reject) => {
+          setTimeout(resolve, ms);
+        });
+
+      const result = (interval) => {
+        if (!alert(`게임 종료. 점수: ${score}점`)) {
+          started = false;
+          second = 61;
+          timerTag.textContent = `${second - 1}초`;
+          count = 0;
+          score = 0;
+          scoreTag.textContent = `${score}점`;
+          clearInterval(interval);
+
+          heartContainerTag.appendChild(heart1);
+          heartContainerTag.appendChild(heart2);
+          heartContainerTag.appendChild(heart3);
+        }
+      };
+
+      startTag.addEventListener("click", async () => {
+        if (started) return;
+        started = true;
+
+        const tickId = setInterval(tick, 1000);
+        tick();
+
+        second--;
+        for (let i = 0; i < 60; i++) {
+          if (second >= 61) return;
+          await setTimeoutPromise(1000);
+          second--;
+          timerTag.textContent = `${second}초`;
+          // 15초부터 빨간 글씨
+          if (second <= 15) {
+            document.querySelector("#timer").style.color = "red";
+          }
+          // 시간 초과 시
+          if (second <= 0) {
+            document.querySelector("#timer").style.color = "black";
+            result(tickId);
+          }
+          if (count >= 3) {
+            result(tickId);
+          }
+        }
+      });
+
+      const tick = () => {
+        holes.forEach((hole, index) => {
+          if (hole) return;
+          const teemoTag = cellTags[index].querySelector(".teemo");
+          const bombTag = cellTags[index].querySelector(".bomb");
+          let randomNumber = Math.random();
+          if (randomNumber < teemoPercent) {
+            holes[index] = setTimeout(() => {
+              teemoTag.classList.add("hidden");
+              holes[index] = 0;
+              if (teemoTag.classList.length >= 3) {
+                teemoTag.classList.remove("dead");
+              }
+            }, 1000);
+            teemoTag.classList.remove("hidden");
+          } else if (randomNumber < bombPercent) {
+            holes[index] = setTimeout(() => {
+              bombTag.classList.add("hidden");
+              holes[index] = 0;
+            }, 1000);
+            bombTag.classList.remove("hidden");
+          } else {
+            return;
+          }
+        });
+      };
+
+      cellTags.forEach((cell, index) => {
+        // 티모 클릭
+        cell.querySelector(".teemo").addEventListener("click", (e) => {
+          e.target.classList.add("dead");
+          e.target.classList.add("hidden");
+          clearTimeout(holes[index]);
+          setTimeout(() => {
+            e.target.classList.remove("dead");
+            holes[index] = 0;
+          }, 1000);
+          score++;
+          scoreTag.textContent = `${score}점`;
+        });
+        // 폭탄 클릭
+        cell.querySelector(".bomb").addEventListener("click", (e) => {
+          count++;
+          e.target.classList.add("boom");
+          e.target.classList.add("hidden");
+          clearTimeout(holes[index]);
+          setTimeout(() => {
+            e.target.classList.remove("boom");
+            holes[index] = 0;
+          }, 1000);
+          // 목숨깎기
+          if (count >= 3) {
+            heartContainerTag.removeChild(heart1);
+          } else if (count >= 2) {
+            heartContainerTag.removeChild(heart2);
+          } else if (count >= 1) {
+            heartContainerTag.removeChild(heart3);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

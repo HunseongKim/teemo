@@ -1,0 +1,106 @@
+body {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1.5fr;
+}
+#left {
+  background: url(./backgroundTeemo.jpg);
+}
+#right {
+  background: url(./backgroundSante.jpg);
+}
+
+#mid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#timer {
+  border: 4px black;
+  border-style: double;
+  font-size: 20px;
+  padding: 3px;
+}
+#score {
+  font-size: 20px;
+}
+button {
+  border-radius: 0%;
+  width: 50px;
+  height: 40px;
+  background-color: white;
+  font-size: 17px;
+}
+button:hover {
+  background-color: aliceblue;
+}
+
+#heartContainer {
+  display: flex;
+  margin-top: 20px;
+}
+.heart {
+  background: url("./heart.png") center center no-repeat;
+  background-size: 80px 80px;
+  width: 80px;
+  height: 80px;
+}
+
+.cell {
+  display: inline-block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: "yellow";
+  overflow: hidden;
+}
+
+.teemo,
+.bomb {
+  width: 200px;
+  height: 200px;
+  bottom: 0;
+  position: absolute;
+  transition: bottom 1s;
+}
+
+.teemo {
+  background: url("./teemo.png") center center no-repeat;
+  background-size: 200px 200px;
+}
+.dead {
+  background: url("./deadTeemo.png") center center no-repeat;
+  background-size: 200px 200px;
+}
+
+.bomb {
+  background: url("./bomb.png") center center no-repeat;
+  background-size: 200px 200px;
+}
+.boom {
+  background: url("./explode.png") center center no-repeat;
+  background-size: 200px 200px;
+}
+
+.hidden {
+  bottom: -200px;
+}
+
+.hole {
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  bottom: 0;
+  background: url("./mole-hole.png") center center no-repeat;
+  background-size: 200px 150px;
+}
+
+.holeFront {
+  width: 200px;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  background: url("./mole-hole-front.png") center center no-repeat;
+  background-size: 200px 30px;
+}
